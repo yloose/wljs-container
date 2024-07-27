@@ -4,7 +4,9 @@ USER root
 
 RUN useradd -m wljs
 
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git nginx
+
+COPY wljs-routes /etc/nginx/site-available/default
 
 RUN mkdir -p /wljs
 WORKDIR /wljs
