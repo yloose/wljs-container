@@ -10,10 +10,10 @@ chown -R wljs:wljs /wljs
 chown -R wljs:wljs /home/wljs
 
 LICENSE_DIR=/home/wljs/.WolframEngine/Licensing
-mkdir -p $LICENSING_DIR
-if [ ! -f $LICENSING_DIR/mathpass ]; then
+mkdir -p $LICENSE_DIR
+if [ ! -f $LICENSE_DIR/mathpass ]; then
   if [ -f /Licensing/mathpass ]; then
-    cp /Licensing/mathpass $LICENSING_DIR/mathpass
+    cp /Licensing/mathpass $LICENSE_DIR/mathpass
   else
     echo "No license file available!"
     exit -1
