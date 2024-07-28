@@ -7,6 +7,7 @@ server {
     # Replaces request inside the html made to the websocket ports to the nginx location endpoints
     sub_filter_once off;
     sub_filter_types *;
+    sub_filter '"ws://"' '(window.location.protocol == "https://" ? "wss://" : "ws://")'
     sub_filter "4001" "'3000/ws/'";
     sub_filter "4002" "'3000/ws2/'";
 
