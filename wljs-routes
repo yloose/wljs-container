@@ -7,9 +7,8 @@ server {
     # Replaces request inside the html made to the websocket ports to the nginx location endpoints
     sub_filter_once off;
     sub_filter_types *;
-    sub_filter '"ws://"' '(window.location.protocol == "https:" ? "wss://" : "ws://")';
-    sub_filter "4001" "'3000/ws/'";
-    sub_filter "4002" "'3000/ws2/'";
+    sub_filter 'WebSocket("ws://"+window.location.hostname+\':\'+4001)' 'WebSocket((window.location.protocol == "https:" ? "wss://" : "ws://") + window.location.hostname + ":3000/ws/")';
+    sub_filter 'WebSocket(\'ws://\'+window.location.hostname+\':\'+port)' 'WebSocket((window.location.protocol == "https:" ? "wss://" : "ws://") + window.location.hostname + (port == 4001 ? ":3000/ws/" : ":3000/ws2/"))';
 
     proxy_pass http://127.0.0.1:4000/;
   }
