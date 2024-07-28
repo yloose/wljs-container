@@ -2,43 +2,25 @@ server {
   listen 3000;
 
   location / {
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "Upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
+    include snippets/proxy.conf;
 
     # Replaces request inside the html made to the websocket ports to the nginx location endpoints
     sub_filter_once off;
     sub_filter_types *;
-    sub_filter "4001" "/ws/";
-    sub_filter "4002" "/ws2/";
+    sub_filter "4001" "'3000/ws/'";
+    sub_filter "4002" "'3000/ws2/'";
 
     proxy_pass http://127.0.0.1:4000/;
   }
 
   location /ws/ {
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "Upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
+    include snippets/proxy.conf;
 
     proxy_pass http://127.0.0.1:4001/;
   }
 
   location /ws2/ {
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "Upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
+    include snippets/proxy.conf;
 
     proxy_pass http://127.0.0.1:4002/;
   }
