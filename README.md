@@ -24,3 +24,37 @@ The container also includes a nginx proxy running by default. This aggreggates t
 > **Warning** This is pretty instable and can break at any slight change upstream. The docs also do not work this way.
 
 To use simply expose port 3000 and access the app over there.
+
+### TLS proxy config
+
+To run the container behind a reverse proxy to add TLS support, a minimal nginx configuration similiar to this one could be used:
+
+```
+server {
+    listen 80;
+    server_name wljs.example.com;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name wljs.example.com;
+    
+    ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
+    ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+
+    set $upstream http://<container_host>:3000;
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "keep-alive, upgrade";
+
+        proxy_pass $upstream;
+    }
+}
+
+```
